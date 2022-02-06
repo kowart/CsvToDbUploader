@@ -9,7 +9,7 @@ namespace ReadDataFromCSVFile
     {
         static void Main()
         {
-            string csv_file_path = @"C:\Users\artko\Desktop\ListaSzkolPolska_24.11.2021\combined-csv-files.csv";
+            string csv_file_path = @"C:\XXX\yyy.csv";
             DataTable csvData = GetDataTabletFromCSVFile(csv_file_path);
             Console.WriteLine("Rows count:" + csvData.Rows.Count);
             Console.ReadLine();
@@ -55,17 +55,17 @@ namespace ReadDataFromCSVFile
 
         private static void InsertDataIntoSQLServerUsingSQLBulkCopy(DataTable csvFileData)
         {
-            using (SqlConnection dbConnection = new SqlConnection("Server=localhost;Database=School_db;Trusted_Connection=True;"))
+            using (SqlConnection dbConnection = new SqlConnection("Server=localhost;Database=Any_db;Trusted_Connection=True;"))
             {
                 dbConnection.Open();
-                using (SqlBulkCopy s = new SqlBulkCopy(dbConnection))
+                using (var blukCopy = new SqlBulkCopy(dbConnection))
                 {
-                    s.DestinationTableName = "School";
+                    blukCopy.DestinationTableName = "TableName";
 
                     foreach (var column in csvFileData.Columns)
-                        s.ColumnMappings.Add(column.ToString(), column.ToString());
+                        blukCopy.ColumnMappings.Add(column.ToString(), column.ToString());
 
-                    s.WriteToServer(csvFileData);
+                    blukCopy.WriteToServer(csvFileData);
                 }
             }
         }
